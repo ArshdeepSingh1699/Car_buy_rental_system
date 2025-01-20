@@ -4,11 +4,58 @@ This Java application provides a basic car rental management system with a graph
 
 #### Features
 
-- **Car Management**: A `Car` class encapsulates car details, rental pricing, and availability, including methods for renting and returning cars.
-- **Graphical User Interface (GUI)**: The `CarRentalSystemGUI` class, built using Java Swing, provides an interactive interface for managing car rentals.
-- **User Interaction**: Users can rent or return cars by entering a car ID through input dialogs, with the status and actions displayed in a text area.
-- **Data Display**: Actions are logged in a `JTextArea` within a `JScrollPane`, giving users a clear view of current transactions.
-- **Application Initialization**: The `Main` class sets up initial car data and launches the GUI using `SwingUtilities.invokeLater` to ensure thread-safe operations.
+1. User-Friendly GUI:
+
+Built using Swing components like JFrame, JButton, JTextArea, and JOptionPane for simplicity and easy interactions.
+
+2. Car Management:
+
+Car Information: Each car has a unique ID, brand, model, rental price per day, and availability status.
+
+Cars are stored in a List for efficient management.
+
+3. Renting a Car:
+
+Users can rent a car by entering its unique Car ID.
+
+If the car is available, it is marked as rented, and a success message is displayed in the output area.
+
+If the car is unavailable or the ID is invalid, an error message is displayed.
+
+4. Returning a Car:
+
+Users can return a car by entering its Car ID.
+
+If the car was previously rented, it is marked as available, and a success message is displayed.
+
+If the car is not rented or the ID is invalid, an error message is shown.
+
+5. Real-Time Output Display:
+
+A JTextArea in the GUI displays messages about rental or return operations, keeping users informed of their actions.
+
+6. Data Validation:
+
+Ensures only valid Car IDs are processed for renting or returning operations.
+
+7. Preloaded Cars:
+
+Three sample cars (Toyota Camry, Honda Accord, Mahindra Thar) are preloaded with unique IDs and rental prices for demonstration.
+
+8. Simple and Clear Structure:
+
+Methods are self-contained (rentCar, returnCar) and easy to understand.
+
+Minimal layout complexity ensures focus on functionality.
+
+9. Platform-Independent:
+
+Written in Java, it runs on any system with the Java Runtime Environment (JRE).
+
+10. Scalability:
+
+The List<Car> structure allows easy addition of more cars to the system.
+
 
 #### Getting Started
 
