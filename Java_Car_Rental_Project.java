@@ -1,164 +1,99 @@
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents a car
 class Car {
     private String carId;
     private String brand;
     private String model;
-    private double basePricePerDay;
-    private boolean isAvailable;
+    private double pricePerDay;
+    private boolean available;
 
-    public Car(String carId, String brand, String model, double basePricePerDay) {
+    // Constructor
+    public Car(String carId, String brand, String model, double pricePerDay) {
         this.carId = carId;
         this.brand = brand;
         this.model = model;
-        this.basePricePerDay = basePricePerDay;
-        this.isAvailable = true;
+        this.pricePerDay = pricePerDay;
+        this.available = true;
     }
 
-    public String getCarId() {
-        return carId;
-    }
+    // Getters
+    public String getCarId() { return carId; }
+    public String getBrand() { return brand; }
+    public String getModel() { return model; }
+    public double getPricePerDay() { return pricePerDay; }
+    public boolean isAvailable() { return available; }
 
-    public String getBrand() {
-        return brand;
-    }
+    // Rent the car
+    public void rent() { available = false; }
 
-    public String getModel() {
-        return model;
-    }
-
-    public double calculatePrice(int rentalDays) {
-        return basePricePerDay * rentalDays;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void rent() {
-        isAvailable = false;
-    }
-
-    public void returnCar() {
-        isAvailable = true;
-    }
+    // Return the car
+    public void returnCar() { available = true; }
 }
 
-class CarRentalSystemGUI extends JFrame {
+// Main GUI Class
+public class CarRentalSystemGUI {
     private List<Car> cars;
-    private JTextArea outputTextArea;
 
-    public CarRentalSystemGUI(List<Car> cars) {
-        this.cars = cars;
-        setTitle("Car Rental System");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-        initComponents();
+    public CarRentalSystemGUI() {
+        cars = new ArrayList<>();
+        cars.add(new Car("Z001", "Toyota", "Hilux", 95.0));
+        cars.add(new Car("Z002", "Honda", "City", 80.0));
+        cars.add(new Car("Z003", "Mahindra", "Scorpio", 105.0));
     }
 
-    private void initComponents() {
-        JPanel mainPanel = new JPanel(new BorderLayout()) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                ImageIcon icon = new ImageIcon("background.jpg"); // Replace with your image path
-                Image img = icon.getImage();
-                g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
-            }
-        };
+    public void displayGUI() {
+        JFrame frame = new JFrame("Car Rental System");
+        frame.setSize(500, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mainPanel.setLayout(new BorderLayout());
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 10, 10));
-        buttonPanel.setOpaque(false);
-        
+        JTextArea outputArea = new JTextArea(10, 30);
+        outputArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputArea);
+
         JButton rentButton = new JButton("Rent a Car");
-        rentButton.setFont(new Font("Arial", Font.BOLD, 14));
-        rentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                rentCar();
-            }
-        });
+        rentButton.addActionListener(e -> rentCar(outputArea));
 
         JButton returnButton = new JButton("Return a Car");
-        returnButton.setFont(new Font("Arial", Font.BOLD, 14));
-        returnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                returnCar();
-            }
-        });
+        returnButton.addActionListener(e -> returnCar(outputArea));
 
-        buttonPanel.add(rentButton);
-        buttonPanel.add(returnButton);
+        JPanel panel = new JPanel();
+        panel.add(rentButton);
+        panel.add(returnButton);
 
-        outputTextArea = new JTextArea(10, 40);
-        outputTextArea.setEditable(false);
-        outputTextArea.setFont(new Font("Arial", Font.PLAIN, 14));
-        JScrollPane scrollPane = new JScrollPane(outputTextArea);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
-        
-        mainPanel.add(buttonPanel, BorderLayout.NORTH);
-        mainPanel.add(scrollPane, BorderLayout.CENTER);
+        frame.add(panel, "North");
+        frame.add(scrollPane, "Center");
 
-        add(mainPanel);
+        frame.setVisible(true);
     }
 
-    private void rentCar() {
+    private void rentCar(JTextArea outputArea) {
         String carId = JOptionPane.showInputDialog("Enter Car ID:");
-        Car selectedCar = null;
         for (Car car : cars) {
             if (car.getCarId().equals(carId) && car.isAvailable()) {
-                selectedCar = car;
-                break;
+                car.rent();
+                outputArea.append("Rented: " + car.getBrand() + " " + car.getModel() + "\n");
+                return;
             }
         }
-        if (selectedCar != null) {
-            selectedCar.rent();
-            outputTextArea.append("Car rented: " + selectedCar.getBrand() + " " + selectedCar.getModel() + "\n");
-        } else {
-            outputTextArea.append("Invalid car ID or car not available for rent.\n");
-        }
+        outputArea.append("Car not available or invalid ID.\n");
     }
 
-    private void returnCar() {
+    private void returnCar(JTextArea outputArea) {
         String carId = JOptionPane.showInputDialog("Enter Car ID:");
-        Car selectedCar = null;
         for (Car car : cars) {
             if (car.getCarId().equals(carId) && !car.isAvailable()) {
-                selectedCar = car;
-                break;
+                car.returnCar();
+                outputArea.append("Returned: " + car.getBrand() + " " + car.getModel() + "\n");
+                return;
             }
         }
-        if (selectedCar != null) {
-            selectedCar.returnCar();
-            outputTextArea.append("Car returned: " + selectedCar.getBrand() + " " + selectedCar.getModel() + "\n");
-        } else {
-            outputTextArea.append("Invalid car ID or car is not rented.\n");
-        }
+        outputArea.append("Car not rented or invalid ID.\n");
     }
-}
 
-public class Main {
     public static void main(String[] args) {
-        List<Car> cars = new ArrayList<>();
-        cars.add(new Car("C001", "Toyota", "Camry", 60.0));
-        cars.add(new Car("C002", "Honda", "Accord", 70.0));
-        cars.add(new Car("C003", "Mahindra", "Thar", 150.0));
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                CarRentalSystemGUI gui = new CarRentalSystemGUI(cars);
-                gui.setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() -> new CarRentalSystemGUI().displayGUI());
     }
 }
